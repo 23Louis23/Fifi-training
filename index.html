@@ -138,6 +138,88 @@
   .view { display: none; padding: 24px; max-width: 900px; margin: 0 auto; }
   .view.active { display: block; }
 
+  /* ── WEEK SELECTOR ── */
+  .week-selector {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .week-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 6px 14px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all .2s;
+  }
+  .week-btn.active {
+    background: var(--red);
+    border-color: var(--red);
+    color: #fff;
+  }
+
+  /* ── CYCLE SELECTOR ── */
+  .cycle-selector {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .cycle-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all .2s;
+  }
+  .cycle-btn.active {
+    background: var(--orange);
+    border-color: var(--orange);
+    color: #fff;
+  }
+
+  /* ── DATE INPUT ── */
+  .date-input {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-radius: 2px;
+    margin-bottom: 24px;
+    color-scheme: dark;
+    width: 100%;
+    max-width: 220px;
+  }
+  .date-input:focus { outline: none; border-color: var(--orange); }
+
+  /* ── SEANCE DATE ── */
+  .seance-date {
+    display: block;
+    font-size: 9px;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--green-light);
+    margin-top: 2px;
+  }
+  .seance-btn.active .seance-date { color: #fff; }
+
   /* ── SECTION TITLE ── */
   .section-head {
     font-family: 'Barlow Condensed', sans-serif;
@@ -381,10 +463,8 @@
     border-color: var(--red);
     color: #fff;
   }
-  .seance-btn.done::after {
-    content: ' ✓';
-    color: var(--green-light);
-  }
+  .seance-btn.done { border-color: var(--green-light); }
+  .seance-btn.done::before { content: '✓ '; color: var(--green-light); }
 
   /* ── ABDOS CARD ── */
   .abdos-card {
@@ -452,6 +532,18 @@
     text-transform: uppercase;
     color: var(--muted);
     margin-top: 4px;
+  }
+  .progress-bar-wrap {
+    background: var(--border);
+    height: 4px;
+    border-radius: 2px;
+    margin-top: 10px;
+  }
+  .progress-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--orange);
+    transition: width .4s ease;
   }
 
   /* ── HISTORY TABLE ── */
@@ -549,9 +641,21 @@
 <!-- ═══════════════════════════════════════════ -->
 <div id="tab-seance" class="view active">
 
+  <!-- Cycle selector -->
+  <div class="section-head">Cycle</div>
+  <div class="cycle-selector" id="cycleSelector"></div>
+
+  <!-- Week selector -->
+  <div class="section-head">Semaine</div>
+  <div class="week-selector" id="weekSelector"></div>
+
   <!-- Seance selector -->
   <div class="section-head">Séance</div>
   <div class="seance-nav" id="seanceNav"></div>
+
+  <!-- Date -->
+  <div class="section-head">Date de la séance</div>
+  <input type="date" id="seanceDate" class="date-input">
 
   <!-- Hooper -->
   <div class="section-head">Index de Hooper — avant la séance</div>
@@ -638,18 +742,35 @@
 
 <script>
 // ═══════════════════════════════════════════════════
-// CONFIG — même projet Supabase que Jox (base commune)
+// CONFIG — même projet Supabase que Jox et Loan (base commune)
 // ═══════════════════════════════════════════════════
 const SUPABASE_URL = "https://itubxfyqqpthwpqhbrje.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml0dWJ4ZnlxcXB0aHdwcWhicmplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxNjk4NzcsImV4cCI6MjA5ODc0NTg3N30.l_E1eAgVRusOJNHHDGbn3ulEXexYJp25gPUG2_7CGBM";
+// Clé découpée en morceaux : Vercel censure automatiquement les chaînes qui ressemblent
+// à un JWT complet quand il sert la page (ex: "eyJhbGci...eyJpc3M....xyz"), ce qui cassait
+// la connexion à Supabase. En la reconstruisant à l'exécution, ça évite ce problème.
+const SUPABASE_ANON_KEY = ["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9", "eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml0dWJ4ZnlxcXB0aHdwcWhicmplIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMxNjk4NzcsImV4cCI6MjA5ODc0NTg3N30", "l_E1eAgVRusOJNHHDGbn3ulEXexYJp25gPUG2_7CGBM"].join(".");
 const APP_PIN = "1357"; // change ce code si tu veux, partage-le uniquement avec Fifi
 const ATHLETE = "Fifi";
 
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ═══════════════════════════════════════════════════
-// DATA — Programme Fifi (rotation Push / Pull / Legs, sans semaines fixes)
+// DATA — Programme Fifi
+// 1 cycle "Push Pull Legs" sur 4 semaines, chaque semaine a une séance
+// Push, une Pull et une Legs (exercices identiques chaque semaine pour l'instant).
 // ═══════════════════════════════════════════════════
+const CYCLES = {
+  "pushpulllegs": { label: "Push Pull Legs", weeks: ["S1","S2","S3","S4"] },
+  // prochain cycle à ajouter ici une fois défini par le coach
+};
+
+const PROGRAMME = {
+  "S1": { label: "Semaine 1", seances: ["Push","Pull","Legs"] },
+  "S2": { label: "Semaine 2", seances: ["Push","Pull","Legs"] },
+  "S3": { label: "Semaine 3", seances: ["Push","Pull","Legs"] },
+  "S4": { label: "Semaine 4", seances: ["Push","Pull","Legs"] },
+};
+
 const SEANCES = {
   "Push": {
     label: "Push",
@@ -704,14 +825,29 @@ const HOOPER_BANDS = [
 ];
 
 // ═══════════════════════════════════════════════════
+// DATE HELPERS
+// ═══════════════════════════════════════════════════
+function todayISO() {
+  const d = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+function formatDateFr(iso) {
+  const [y, m, d] = iso.split('-');
+  return `${d}/${m}/${y}`;
+}
+function parseDateFrToISO(fr) {
+  const [d, m, y] = fr.split('/');
+  return `${y}-${m}-${d}`;
+}
+
+// ═══════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════
+let currentCycle = "pushpulllegs";
+let currentWeek = "S1";
 let currentSeance = "Push";
 let dataCache = {};
-
-function todayISO() {
-  return new Date().toISOString().slice(0, 10); // YYYY-MM-DD, trie correctement par ordre chronologique
-}
 
 // ═══════════════════════════════════════════════════
 // PIN GATE
@@ -732,6 +868,8 @@ async function unlockApp() {
   await refreshData();
   document.getElementById('loadingMsg').style.display = 'none';
   document.getElementById('appRoot').style.display = 'block';
+  renderCycles();
+  renderWeeks();
   renderSeanceNav();
   renderSeance();
   updateHooper();
@@ -742,8 +880,7 @@ if (localStorage.getItem('fifi_pin_ok') === '1') {
 }
 
 // ═══════════════════════════════════════════════════
-// DATA (Supabase) — "week" stocke la date du jour (YYYY-MM-DD)
-// pour garder un historique daté sans notion de semaine fixe.
+// DATA (Supabase)
 // ═══════════════════════════════════════════════════
 async function refreshData() {
   const { data, error } = await db.from('sessions').select('*').eq('athlete', ATHLETE);
@@ -755,7 +892,7 @@ async function refreshData() {
   dataCache = {};
   (data || []).forEach(row => {
     dataCache[`${row.week}_${row.seance}`] = {
-      date_key: row.week,
+      week: row.week,
       seance: row.seance,
       label: row.label,
       date: row.date_recorded,
@@ -770,12 +907,6 @@ function loadData() {
   return dataCache;
 }
 
-function lastEntryFor(seance) {
-  const entries = Object.values(loadData()).filter(s => s.seance === seance);
-  entries.sort((a, b) => b.date_key.localeCompare(a.date_key));
-  return entries[0];
-}
-
 // ═══════════════════════════════════════════════════
 // UI
 // ═══════════════════════════════════════════════════
@@ -788,14 +919,55 @@ function showTab(id) {
   if (id === 'tab-history') renderHistory();
 }
 
+function renderCycles() {
+  const el = document.getElementById('cycleSelector');
+  el.innerHTML = Object.keys(CYCLES).map(c => `
+    <button class="cycle-btn ${c === currentCycle ? 'active' : ''}"
+            onclick="selectCycle('${c}')">
+      ${CYCLES[c].label}
+    </button>
+  `).join('');
+}
+
+function selectCycle(c) {
+  currentCycle = c;
+  currentWeek = CYCLES[c].weeks[0];
+  currentSeance = PROGRAMME[currentWeek].seances[0];
+  renderCycles();
+  renderWeeks();
+  renderSeanceNav();
+  renderSeance();
+}
+
+function renderWeeks() {
+  const el = document.getElementById('weekSelector');
+  el.innerHTML = CYCLES[currentCycle].weeks.map(wk => `
+    <button class="week-btn ${wk === currentWeek ? 'active' : ''}"
+            onclick="selectWeek('${wk}')">
+      ${PROGRAMME[wk].label}
+    </button>
+  `).join('');
+}
+
+function selectWeek(wk) {
+  currentWeek = wk;
+  currentSeance = PROGRAMME[wk].seances[0];
+  renderWeeks();
+  renderSeanceNav();
+  renderSeance();
+}
+
 function renderSeanceNav() {
+  const seances = PROGRAMME[currentWeek].seances;
   const data = loadData();
-  const today = todayISO();
   const el = document.getElementById('seanceNav');
-  el.innerHTML = Object.keys(SEANCES).map(s => {
-    const doneToday = data[`${today}_${s}`] ? 'done' : '';
-    return `<button class="seance-btn ${s === currentSeance ? 'active' : ''} ${doneToday}"
-                    onclick="selectSeance('${s}')">${SEANCES[s].label}</button>`;
+  el.innerHTML = seances.map(s => {
+    const key = `${currentWeek}_${s}`;
+    const entry = data[key];
+    const done = entry ? 'done' : '';
+    const dateHtml = entry ? `<span class="seance-date">${entry.date}</span>` : '';
+    return `<button class="seance-btn ${s === currentSeance ? 'active' : ''} ${done}"
+                    onclick="selectSeance('${s}')">${SEANCES[s].label}${dateHtml}</button>`;
   }).join('');
 }
 
@@ -808,11 +980,13 @@ function selectSeance(s) {
 function renderSeance() {
   const seance = SEANCES[currentSeance];
   const data = loadData();
-  const today = todayISO();
-  const saved = data[`${today}_${currentSeance}`] || {};
-  const last = lastEntryFor(currentSeance);
+  const key = `${currentWeek}_${currentSeance}`;
+  const saved = data[key] || {};
 
-  // Load Hooper (celui déjà enregistré aujourd'hui, sinon valeurs neutres)
+  // Load Date (celle déjà enregistrée, sinon aujourd'hui)
+  document.getElementById('seanceDate').value = saved.date ? parseDateFrToISO(saved.date) : todayISO();
+
+  // Load Hooper
   const hooper = saved.hooper || { sommeil: 1, stress: 1, fatigue: 1, douleur: 1 };
   document.getElementById('sl-sommeil').value = hooper.sommeil;
   document.getElementById('sl-stress').value  = hooper.stress;
@@ -849,8 +1023,7 @@ function renderSeance() {
       </div>`;
       return;
     }
-    // Pré-remplit avec la charge enregistrée aujourd'hui, sinon la dernière séance connue pour cet exercice
-    const savedW = saved.weights?.[exo.nom] ?? last?.weights?.[exo.nom] ?? '';
+    const savedW = saved.weights?.[exo.nom] ?? '';
     html += `<div class="exo-item">
       <div class="exo-row">
         <span class="exo-name">${exo.nom}</span>
@@ -859,7 +1032,7 @@ function renderSeance() {
         <span class="exo-meta col-recup">${exo.recup}</span>
         <span class="exo-rpe">${exo.rpe}</span>
         <div class="weight-input-wrap">
-          <input type="number" class="weight-input ${saved.weights?.[exo.nom] ? 'saved' : ''}"
+          <input type="number" class="weight-input ${savedW ? 'saved' : ''}"
                  id="w_${i}" value="${savedW}" placeholder="—" min="0" step="1.25"
                  oninput="this.classList.remove('saved')">
           <span class="weight-unit">kg</span>
@@ -930,13 +1103,13 @@ async function saveSession() {
 
   const entry = {
     athlete: ATHLETE,
-    week: todayISO(),
+    week: currentWeek,
     seance: currentSeance,
     label: seance.label,
-    date_recorded: new Date().toLocaleDateString('fr-FR'),
+    date_recorded: formatDateFr(document.getElementById('seanceDate').value),
     hooper,
-    notes,
     weights,
+    notes,
   };
 
   const { error } = await db.from('sessions').upsert(entry, { onConflict: 'athlete,week,seance' });
@@ -963,31 +1136,34 @@ function showToast(msg) {
 // ═══════════════════════════════════════════════════
 function renderDashboard() {
   const data = loadData();
-  const sessions = Object.values(data).sort((a, b) => a.date_key.localeCompare(b.date_key));
+  const sessions = Object.values(data);
   const totalSessions = sessions.length;
+  const totalWeeks = new Set(sessions.map(s => s.week)).size;
 
   const hoopers = sessions.filter(s => s.hooper).map(s => s.hooper.total);
   const avgHooper = hoopers.length ? Math.round(hoopers.reduce((a,b) => a+b, 0) / hoopers.length) : '—';
 
-  const firstDate = sessions[0]?.date || '—';
-  const lastDate = sessions[sessions.length - 1]?.date || '—';
+  const totalPossible = Object.values(PROGRAMME).reduce((a,p) => a + p.seances.length, 0);
+  const pct = Math.round((totalSessions / totalPossible) * 100);
 
   document.getElementById('dash-stats').innerHTML = `
     <div class="stat-card">
       <div class="stat-val">${totalSessions}</div>
       <div class="stat-lbl">Séances enregistrées</div>
+      <div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">${totalWeeks}<span style="font-size:18px;color:var(--muted)">/4</span></div>
+      <div class="stat-lbl">Semaines actives</div>
     </div>
     <div class="stat-card">
       <div class="stat-val" style="color:${avgHooper < 16 ? '#2A6B35' : avgHooper < 20 ? '#C9932A' : '#B22222'}">${avgHooper}</div>
       <div class="stat-lbl">Score Hooper moyen</div>
     </div>
     <div class="stat-card">
-      <div class="stat-val" style="font-size:20px">${firstDate}</div>
-      <div class="stat-lbl">Première séance</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val" style="font-size:20px">${lastDate}</div>
-      <div class="stat-lbl">Dernière séance</div>
+      <div class="stat-val">${pct}%</div>
+      <div class="stat-lbl">Complétion du cycle</div>
+      <div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>
     </div>
   `;
 
@@ -996,7 +1172,7 @@ function renderDashboard() {
   KEY_LIFTS.forEach(lift => {
     const points = [];
     sessions.forEach(s => {
-      if (s.weights?.[lift]) points.push({ val: s.weights[lift], date: s.date });
+      if (s.weights?.[lift]) points.push({ week: s.week, val: s.weights[lift], date: s.date });
     });
     if (!points.length) return;
     const max = Math.max(...points.map(p => p.val)) * 1.15;
@@ -1014,7 +1190,7 @@ function renderDashboard() {
           }).join('')}
         </div>
         <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:9px;color:var(--muted)">
-          <span>${points[0].date}</span><span>${points[points.length-1].date}</span>
+          <span>${points[0].week}</span><span>${points[points.length-1].week}</span>
         </div>
       </div>
     `;
@@ -1027,14 +1203,14 @@ function renderDashboard() {
 // ═══════════════════════════════════════════════════
 function renderHistory() {
   const data = loadData();
-  const sessions = Object.values(data).sort((a, b) => b.date_key.localeCompare(a.date_key));
+  const sessions = Object.values(data).sort((a,b) => (b.week + b.seance).localeCompare(a.week + a.seance));
   if (!sessions.length) {
     document.getElementById('history-content').innerHTML = `<p style="color:var(--muted);font-size:13px">Aucune séance enregistrée pour l'instant.</p>`;
     return;
   }
 
   let html = `<table class="history-table"><thead><tr>
-    <th>Date</th><th>Séance</th><th>Hooper</th><th>Charges clés</th>
+    <th>Date</th><th>Semaine</th><th>Séance</th><th>Hooper</th><th>Charges clés</th>
   </tr></thead><tbody>`;
 
   sessions.forEach(s => {
@@ -1046,6 +1222,7 @@ function renderHistory() {
       : '';
     html += `<tr>
       <td style="color:var(--muted)">${s.date}</td>
+      <td>${s.week}</td>
       <td style="font-size:11px">${s.label}</td>
       <td>${band ? `<span class="badge" style="background:${band.bg};color:${band.color}">${s.hooper.total}/28 — ${band.label}</span>` : '—'}</td>
       <td style="font-size:11px">${keyW || '—'}${notesHtml}</td>
