@@ -825,8 +825,8 @@ const SEANCES = {
     label: "1 — Bas du corps + Tirage",
     warmup: "<strong>Mobilité :</strong> 2 tours (10/côté dorsiflexion cheville, 10/côté ouverture de hanche, 10/côté rotation épaule élastique R1/R2/R3) — <strong>Activation :</strong> 2 tours (10 air squat profond avec 3’’ pause en bas, 5 good morning élastique léger)",
     exercices: [
-      { nom: "Back Squat",                              series: "4 × 6→1", tempo: "2/0/1/0", rpe: "7-9", recup: "3'" },
-      { nom: "Deadlift (barre)",                         series: "4 × 6→1", tempo: "2/0/1/0", rpe: "7-9", recup: "3'" },
+      { nom: "Back Squat",                              series: "4 × 6→1", tempo: "2/0/1/0", rpe: "9/10", recup: "3'" },
+      { nom: "Deadlift (barre)",                         series: "4 × 6→1", tempo: "2/0/1/0", rpe: "9/10", recup: "3'" },
       { nom: "Nordic Curl",                              series: "3 × 6-8", tempo: "3/0/1/0", rpe: "7/8", recup: "1'30" },
       { nom: "Leg extension",                            series: "3 × 12",  tempo: "1/0/1/0", rpe: "7/8", recup: "1'30" },
       { nom: "Tirage vertical poulie prise serrée",      series: "3 × 10",  tempo: "2/0/2/0", rpe: "7/8", recup: "1'30" },
@@ -840,8 +840,8 @@ const SEANCES = {
     label: "2 — Push + Bras",
     warmup: "<strong>Mobilité :</strong> 2 tours (10/côté rotation épaule élastique R1/R2/R3, 10 ouverture thoracique, 10 tirages élastiques scapula) — <strong>Activation :</strong> montée en charge développé couché",
     exercices: [
-      { nom: "Développé couché barre",                   series: "4 × 6→1", tempo: "2/0/1/0", rpe: "7-9", recup: "2'30" },
-      { nom: "Développé militaire (haltères→barre)",     series: "4 × 6→1", tempo: "2/0/1/0", rpe: "7-9", recup: "2'30" },
+      { nom: "Développé couché barre",                   series: "4 × 6→1", tempo: "2/0/1/0", rpe: "9/10", recup: "2'30" },
+      { nom: "Développé militaire (haltères→barre)",     series: "4 × 6→1", tempo: "2/0/1/0", rpe: "9/10", recup: "2'30" },
       { nom: "Push press haltères",                      series: "3 × 8",   tempo: "1/0/1/0", rpe: "7/8", recup: "1'30" },
       { nom: "Élévation latérale haltères",               series: "3 × 12",  tempo: "1/0/1/0", rpe: "7/8", recup: "1'15" },
       { nom: "Face pull poulie",                         series: "3 × 12",  tempo: "1/0/2/0", rpe: "7",   recup: "1'15" },
@@ -891,6 +891,44 @@ const FORCE_WEIGHTS = {
   },
   "S9": {
     "1": { "Back Squat": 95, "Deadlift (barre)": 130, "Leg extension": 50, "Tirage vertical poulie prise serrée": 72.6, "Tirage horizontal poulie assise": 72.6 },
+  },
+};
+
+// Reps réellement réalisées sur les 2 premiers exercices de force de chaque séance
+// (progression par paliers descendants 6→1 rep), extraites du suivi Excel de Fifi
+const FORCE_REPS = {
+  "S1": {
+    "1": { "Back Squat": 5, "Deadlift (barre)": 5 },
+    "2": { "Développé couché barre": 5, "Développé militaire (haltères→barre)": 5 },
+  },
+  "S2": {
+    "1": { "Back Squat": 5, "Deadlift (barre)": 5 },
+    "2": { "Développé couché barre": 5, "Développé militaire (haltères→barre)": 5 },
+  },
+  "S3": {
+    "1": { "Back Squat": 5, "Deadlift (barre)": 5 },
+    "2": { "Développé couché barre": 4, "Développé militaire (haltères→barre)": 5 },
+  },
+  "S4": {
+    "1": { "Back Squat": 5, "Deadlift (barre)": 5 },
+    "2": { "Développé couché barre": 3, "Développé militaire (haltères→barre)": 4 },
+  },
+  "S5": {
+    "1": { "Back Squat": 4, "Deadlift (barre)": 5 },
+    "2": { "Développé couché barre": 2, "Développé militaire (haltères→barre)": 3 },
+  },
+  "S6": {
+    "1": { "Back Squat": 4, "Deadlift (barre)": 4 },
+    "2": { "Développé couché barre": 1, "Développé militaire (haltères→barre)": 2 },
+  },
+  "S7": {
+    "1": { "Back Squat": 3, "Deadlift (barre)": 3 },
+  },
+  "S8": {
+    "1": { "Back Squat": 2, "Deadlift (barre)": 2 },
+  },
+  "S9": {
+    "1": { "Back Squat": 1, "Deadlift (barre)": 1 },
   },
 };
 
@@ -1092,7 +1130,9 @@ function renderSeance() {
     </div>`;
 
   seance.exercices.forEach((exo, i) => {
-    const savedNote = saved.notes?.[exo.nom] ?? '';
+    const repsFaites = FORCE_REPS[currentWeek]?.[currentSeance]?.[exo.nom];
+    const defaultNote = repsFaites ? `${repsFaites} reps réalisées` : '';
+    const savedNote = saved.notes?.[exo.nom] ?? defaultNote;
     if (exo.dropset) {
       html += `<div class="exo-item">
         <div class="drop-set-row">
