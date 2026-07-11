@@ -756,19 +756,30 @@ const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ═══════════════════════════════════════════════════
 // DATA — Programme Fifi
-// 1 cycle "Push Pull Legs" sur 4 semaines, chaque semaine a une séance
-// Push, une Pull et une Legs (exercices identiques chaque semaine pour l'instant).
+// Méga-cycle : Force (S1-S9, 2 séances/semaine) => Push Pull Legs (S10-S13, 3 séances/semaine).
+// Numérotation des semaines continue sur tout le méga-cycle, donc pas de collision
+// de données entre cycles même si les codes de séances se répètent.
 // ═══════════════════════════════════════════════════
 const CYCLES = {
-  "pushpulllegs": { label: "Push Pull Legs", weeks: ["S1","S2","S3","S4"] },
+  "force": { label: "Force", weeks: ["S1","S2","S3","S4","S5","S6","S7","S8","S9"] },
+  "pushpulllegs": { label: "Push Pull Legs", weeks: ["S10","S11","S12","S13"] },
   // prochain cycle à ajouter ici une fois défini par le coach
 };
 
 const PROGRAMME = {
-  "S1": { label: "Semaine 1", seances: ["Push","Pull","Legs"] },
-  "S2": { label: "Semaine 2", seances: ["Push","Pull","Legs"] },
-  "S3": { label: "Semaine 3", seances: ["Push","Pull","Legs"] },
-  "S4": { label: "Semaine 4", seances: ["Push","Pull","Legs"] },
+  "S1": { label: "Semaine 1", seances: ["1","2"] },
+  "S2": { label: "Semaine 2", seances: ["1","2"] },
+  "S3": { label: "Semaine 3", seances: ["1","2"] },
+  "S4": { label: "Semaine 4", seances: ["1","2"] },
+  "S5": { label: "Semaine 5", seances: ["1","2"] },
+  "S6": { label: "Semaine 6", seances: ["1","2"] },
+  "S7": { label: "Semaine 7", seances: ["1","2"] },
+  "S8": { label: "Semaine 8", seances: ["1","2"] },
+  "S9": { label: "Semaine 9", seances: ["1","2"] },
+  "S10": { label: "Semaine 10", seances: ["Push","Pull","Legs"] },
+  "S11": { label: "Semaine 11", seances: ["Push","Pull","Legs"] },
+  "S12": { label: "Semaine 12", seances: ["Push","Pull","Legs"] },
+  "S13": { label: "Semaine 13", seances: ["Push","Pull","Legs"] },
 };
 
 const SEANCES = {
@@ -810,10 +821,81 @@ const SEANCES = {
       { nom: "Leg extension unilatéral",   series: "3 × 15", tempo: "1/0/1/0", rpe: "8", recup: "1'30" },
     ]
   },
+  "1": {
+    label: "1 — Bas du corps + Tirage",
+    warmup: "<strong>Mobilité :</strong> 2 tours (10/côté dorsiflexion cheville, 10/côté ouverture de hanche, 10/côté rotation épaule élastique R1/R2/R3) — <strong>Activation :</strong> 2 tours (10 air squat profond avec 3’’ pause en bas, 5 good morning élastique léger)",
+    exercices: [
+      { nom: "Back Squat",                              series: "4 × 6→1", tempo: "2/0/1/0", rpe: "7-9", recup: "3'" },
+      { nom: "Deadlift (barre)",                         series: "4 × 6→1", tempo: "2/0/1/0", rpe: "7-9", recup: "3'" },
+      { nom: "Nordic Curl",                              series: "3 × 6-8", tempo: "3/0/1/0", rpe: "7/8", recup: "1'30" },
+      { nom: "Leg extension",                            series: "3 × 12",  tempo: "1/0/1/0", rpe: "7/8", recup: "1'30" },
+      { nom: "Tirage vertical poulie prise serrée",      series: "3 × 10",  tempo: "2/0/2/0", rpe: "7/8", recup: "1'30" },
+      { nom: "Tirage horizontal poulie assise",          series: "3 × 10",  tempo: "2/0/2/0", rpe: "7",   recup: "1'15" },
+      { nom: "Dead bug",                                 series: "3 × 10/côté", tempo: "Lent", rpe: "—", recup: "30''" },
+      { nom: "Russian Twist (poids)",                    series: "3 × 20",  tempo: "Contrôlé", rpe: "—", recup: "30''" },
+      { nom: "Gainage latéral",                          series: "3 × 30''", tempo: "—", rpe: "—", recup: "30''" },
+    ]
+  },
+  "2": {
+    label: "2 — Push + Bras",
+    warmup: "<strong>Mobilité :</strong> 2 tours (10/côté rotation épaule élastique R1/R2/R3, 10 ouverture thoracique, 10 tirages élastiques scapula) — <strong>Activation :</strong> montée en charge développé couché",
+    exercices: [
+      { nom: "Développé couché barre",                   series: "4 × 6→1", tempo: "2/0/1/0", rpe: "7-9", recup: "2'30" },
+      { nom: "Développé militaire (haltères→barre)",     series: "4 × 6→1", tempo: "2/0/1/0", rpe: "7-9", recup: "2'30" },
+      { nom: "Push press haltères",                      series: "3 × 8",   tempo: "1/0/1/0", rpe: "7/8", recup: "1'30" },
+      { nom: "Élévation latérale haltères",               series: "3 × 12",  tempo: "1/0/1/0", rpe: "7/8", recup: "1'15" },
+      { nom: "Face pull poulie",                         series: "3 × 12",  tempo: "1/0/2/0", rpe: "7",   recup: "1'15" },
+      { nom: "Curl biceps sur banc",                     series: "3 × 8",   tempo: "1/0/1/0", rpe: "8",   recup: "—" },
+      { nom: "Dips buste droit",                         series: "3 × 8",   tempo: "1/0/1/0", rpe: "8",   recup: "1'15" },
+      { nom: "Curl marteau haltères",                    series: "3 × 8",   tempo: "1/0/1/0", rpe: "8",   recup: "—" },
+      { nom: "Extension triceps poulie",                 series: "3 × 8",   tempo: "1/0/1/0", rpe: "8",   recup: "1'30" },
+      { nom: "Relevés de jambes suspendus",              series: "3 × 10-12", tempo: "Contrôlé", rpe: "—", recup: "30''" },
+      { nom: "Hollow hold",                              series: "3 × 30''", tempo: "—", rpe: "—", recup: "30''" },
+      { nom: "GHD / crunch machine",                     series: "3 × 10",  tempo: "2/0/1/0", rpe: "—", recup: "30''" },
+    ]
+  },
+};
+
+// Charges connues du cycle Force, extraites du suivi Excel de Fifi
+// (progression par paliers descendants 6→1 rep, charge croissante à chaque séance)
+const FORCE_WEIGHTS = {
+  "S1": {
+    "1": { "Back Squat": 70, "Deadlift (barre)": 90, "Tirage vertical poulie prise serrée": 72.6, "Tirage horizontal poulie assise": 72.6, "Russian Twist (poids)": 13.6 },
+    "2": { "Développé couché barre": 67.5, "Développé militaire (haltères→barre)": 20, "Push press haltères": 12.5, "Élévation latérale haltères": 10, "Face pull poulie": 27.2, "Curl biceps sur banc": 12.5, "Curl marteau haltères": 17.5 },
+  },
+  "S2": {
+    "1": { "Back Squat": 72.5, "Deadlift (barre)": 95, "Leg extension": 35, "Tirage vertical poulie prise serrée": 72.6, "Tirage horizontal poulie assise": 72.6, "Russian Twist (poids)": 13.6 },
+    "2": { "Développé couché barre": 70.5, "Développé militaire (haltères→barre)": 22.5, "Push press haltères": 15, "Élévation latérale haltères": 10, "Face pull poulie": 27.2, "Curl biceps sur banc": 15, "Curl marteau haltères": 20, "Extension triceps poulie": 45 },
+  },
+  "S3": {
+    "1": { "Back Squat": 75, "Deadlift (barre)": 100, "Leg extension": 40, "Tirage vertical poulie prise serrée": 72.6, "Tirage horizontal poulie assise": 72.6, "Russian Twist (poids)": 18.1 },
+    "2": { "Développé couché barre": 75, "Développé militaire (haltères→barre)": 22.5, "Push press haltères": 17.5, "Élévation latérale haltères": 10, "Face pull poulie": 31.8, "Curl biceps sur banc": 15, "Curl marteau haltères": 20, "Extension triceps poulie": 50 },
+  },
+  "S4": {
+    "1": { "Back Squat": 78, "Deadlift (barre)": 105, "Leg extension": 45, "Tirage vertical poulie prise serrée": 72.6, "Tirage horizontal poulie assise": 72.6, "Russian Twist (poids)": 18.1 },
+    "2": { "Développé couché barre": 77, "Développé militaire (haltères→barre)": 25, "Push press haltères": 20, "Élévation latérale haltères": 10, "Face pull poulie": 36.3, "Curl biceps sur banc": 17.5, "Curl marteau haltères": 20, "Extension triceps poulie": 50 },
+  },
+  "S5": {
+    "1": { "Back Squat": 80, "Deadlift (barre)": 110, "Leg extension": 47.5, "Tirage vertical poulie prise serrée": 72.6, "Tirage horizontal poulie assise": 72.6, "Russian Twist (poids)": 18.1 },
+    "2": { "Développé couché barre": 80, "Développé militaire (haltères→barre)": 52, "Push press haltères": 20, "Élévation latérale haltères": 10, "Face pull poulie": 36.3, "Curl biceps sur banc": 17.5, "Curl marteau haltères": 20, "Extension triceps poulie": 50 },
+  },
+  "S6": {
+    "1": { "Back Squat": 82, "Deadlift (barre)": 115, "Leg extension": 47.5, "Tirage vertical poulie prise serrée": 72.6, "Tirage horizontal poulie assise": 72.6, "Russian Twist (poids)": 18.1 },
+    "2": { "Développé couché barre": 85, "Développé militaire (haltères→barre)": 53, "Push press haltères": 20, "Élévation latérale haltères": 10, "Face pull poulie": 40.8, "Curl biceps sur banc": 20, "Curl marteau haltères": 22.5, "Extension triceps poulie": 54.4 },
+  },
+  "S7": {
+    "1": { "Back Squat": 85, "Deadlift (barre)": 120, "Leg extension": 50, "Tirage vertical poulie prise serrée": 72.6, "Tirage horizontal poulie assise": 72.6, "Russian Twist (poids)": 18.1 },
+  },
+  "S8": {
+    "1": { "Back Squat": 90, "Deadlift (barre)": 125, "Leg extension": 50, "Tirage vertical poulie prise serrée": 72.6, "Tirage horizontal poulie assise": 72.6, "Russian Twist (poids)": 18.1 },
+  },
+  "S9": {
+    "1": { "Back Squat": 95, "Deadlift (barre)": 130, "Leg extension": 50, "Tirage vertical poulie prise serrée": 72.6, "Tirage horizontal poulie assise": 72.6 },
+  },
 };
 
 // Exercices clés suivis dans le tableau de bord
-const KEY_LIFTS = ["Développé incliné barre", "Rowing buste penché haltère unilatéral", "Split squat", "Hip thrust (épaule sur banc)"];
+const KEY_LIFTS = ["Back Squat", "Deadlift (barre)", "Développé couché barre", "Développé incliné barre", "Split squat"];
 
 // Hooper bands
 const HOOPER_BANDS = [
@@ -844,9 +926,9 @@ function parseDateFrToISO(fr) {
 // ═══════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════
-let currentCycle = "pushpulllegs";
+let currentCycle = "force";
 let currentWeek = "S1";
-let currentSeance = "Push";
+let currentSeance = "1";
 let dataCache = {};
 
 // ═══════════════════════════════════════════════════
@@ -1023,7 +1105,8 @@ function renderSeance() {
       </div>`;
       return;
     }
-    const savedW = saved.weights?.[exo.nom] ?? '';
+    const defaultW = FORCE_WEIGHTS[currentWeek]?.[currentSeance]?.[exo.nom] || '';
+    const savedW = saved.weights?.[exo.nom] ?? defaultW;
     html += `<div class="exo-item">
       <div class="exo-row">
         <span class="exo-name">${exo.nom}</span>
@@ -1153,7 +1236,7 @@ function renderDashboard() {
       <div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>
     </div>
     <div class="stat-card">
-      <div class="stat-val">${totalWeeks}<span style="font-size:18px;color:var(--muted)">/4</span></div>
+      <div class="stat-val">${totalWeeks}<span style="font-size:18px;color:var(--muted)">/${Object.keys(PROGRAMME).length}</span></div>
       <div class="stat-lbl">Semaines actives</div>
     </div>
     <div class="stat-card">
