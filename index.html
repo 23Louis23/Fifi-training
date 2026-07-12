@@ -790,7 +790,7 @@ const SEANCES = {
     warmup: "<strong>Échauffement :</strong> 3’ AB (RPE 3/4) — <strong>Mobilité :</strong> 2 tours (10/côté rotation épaule R1/R2/R3, 10 tirages élastiques scapula, 10/côté ouverture thoracique) — <strong>Activation :</strong> montée en charge développé incliné",
     exercices: [
       { nom: "Développé incliné barre",   series: "4 × 8",  tempo: "1/0/2/0", rpe: "9", recup: "1'30" },
-      { nom: "Développé militaire barre", series: "4 × 8",  tempo: "1/0/1/0", rpe: "9", recup: "1'30" },
+      { nom: "Développé militaire barre", series: "4 × 8",  tempo: "2/0/1/0", rpe: "9", recup: "1'30" },
       { nom: "Écarté poulie basse",       series: "3 × 12", tempo: "1/0/1/0", rpe: "8", recup: "1'30" },
       { nom: "Élévations latérales",      series: "4 × 10", tempo: "1/0/1/2", rpe: "8", recup: "1'30" },
       { nom: "Élévations frontales",      series: "4 × 10", tempo: "1/0/1/2", rpe: "8", recup: "1'30" },
@@ -808,14 +808,14 @@ const SEANCES = {
       { nom: "Oiseau",                                       series: "3 × 12", tempo: "1/0/1/1", rpe: "8",    recup: "1'30" },
       { nom: "Shrug haltère",                                series: "3 × 12", tempo: "1/0/1/2", rpe: "8",    recup: "1'30" },
       { nom: "Biceps curl haltère sur banc incliné",         series: "4 × 10", tempo: "1/0/1/0", rpe: "8",    recup: "1'30" },
-      { nom: "Drop set (x3) : biceps corde poulie basse",    series: "4 × 10 (+10/max rep)", tempo: "1/0/1/1", rpe: "9/10", recup: "1'30", dropset: true },
+      { nom: "Biceps corde poulie basse (drop set x3)",      series: "4 × 10 (+10/max rep)", tempo: "1/0/1/1", rpe: "9/10", recup: "1'30", dropWeights: 3 },
     ]
   },
   "Legs": {
     label: "Legs",
     warmup: "<strong>Échauffement :</strong> 3’ bike (RPE 3/4) — <strong>Mobilité :</strong> 3 tours (10/côté dorsiflexion cheville, 10/côté ouverture de hanche) — <strong>Activation :</strong> 2 tours (10 air squat profond avec 3’’ pause en bas)",
     exercices: [
-      { nom: "Split squat",                series: "4 × 8",  tempo: "1/0/1/0", rpe: "9", recup: "1'30" },
+      { nom: "Split squat",                series: "4 × 8",  tempo: "2/0/1/0", rpe: "9", recup: "1'30" },
       { nom: "Hip thrust (épaule sur banc)", series: "4 × 10", tempo: "1/0/1/2", rpe: "9", recup: "1'30" },
       { nom: "Romanian deadlift",          series: "3 × 12", tempo: "1/0/1/0", rpe: "8", recup: "1'30" },
       { nom: "Kick back poulie",           series: "3 × 12", tempo: "1/0/2/0", rpe: "8", recup: "1'30" },
@@ -1136,11 +1136,27 @@ function renderSeance() {
     const repsFaites = FORCE_REPS[currentWeek]?.[currentSeance]?.[exo.nom];
     const defaultNote = repsFaites ? `${repsFaites} reps réalisées` : '';
     const savedNote = saved.notes?.[exo.nom] ?? defaultNote;
-    if (exo.dropset) {
+    if (exo.dropWeights) {
+      const savedArr = Array.isArray(saved.weights?.[exo.nom]) ? saved.weights[exo.nom] : [];
+      const weightInputs = Array.from({ length: exo.dropWeights }, (_, di) => {
+        const v = savedArr[di] ?? '';
+        return `
+          <div style="display:flex;align-items:center;gap:4px">
+            <span style="font-size:9px;color:var(--muted)">${di + 1}</span>
+            <input type="number" class="weight-input ${v !== '' ? 'saved' : ''}"
+                   id="w_${i}_${di}" value="${v}" placeholder="—" min="0" step="1.25"
+                   style="width:56px;font-size:14px;padding:6px 4px"
+                   oninput="this.classList.remove('saved')">
+          </div>`;
+      }).join('');
       html += `<div class="exo-item">
         <div class="drop-set-row">
           <span style="font-size:13px">🔻</span>
           <span class="drop-set-label">${exo.nom} — ${exo.series} — RPE ${exo.rpe} — Récup ${exo.recup}</span>
+        </div>
+        <div class="exo-note-row" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          ${weightInputs}
+          <span class="weight-unit">kg</span>
         </div>
         <div class="exo-note-row">
           <input type="text" class="note-input" id="note_${i}" value="${savedNote}" placeholder="Note">
@@ -1219,7 +1235,18 @@ async function saveSession() {
   seance.exercices.forEach((exo, i) => {
     const noteInput = document.getElementById(`note_${i}`);
     if (noteInput && noteInput.value.trim()) notes[exo.nom] = noteInput.value.trim();
-    if (exo.dropset) return;
+    if (exo.dropWeights) {
+      const arr = Array.from({ length: exo.dropWeights }, (_, di) => {
+        const input = document.getElementById(`w_${i}_${di}`);
+        if (input && input.value) {
+          input.classList.add('saved');
+          return +input.value;
+        }
+        return null;
+      });
+      if (arr.some(v => v !== null)) weights[exo.nom] = arr;
+      return;
+    }
     const input = document.getElementById(`w_${i}`);
     if (input && input.value) {
       weights[exo.nom] = +input.value;
@@ -1356,12 +1383,12 @@ function renderDashCharts() {
 
   const codeSessions = sessions.filter(s => s.seance === dashSeance).sort((a, b) => weekNum(a.week) - weekNum(b.week));
   const def = SEANCES[dashSeance];
-  let exoOrder = def ? def.exercices.filter(e => !e.dropset).map(e => e.nom) : [];
+  let exoOrder = def ? def.exercices.filter(e => !e.dropWeights).map(e => e.nom) : [];
   codeSessions.forEach(s => Object.keys(s.weights || {}).forEach(k => { if (!exoOrder.includes(k)) exoOrder.push(k); }));
 
   let html = '';
   exoOrder.forEach(lift => {
-    const points = codeSessions.filter(s => s.weights?.[lift]).map(s => ({ week: s.week, val: s.weights[lift], date: s.date }));
+    const points = codeSessions.filter(s => typeof s.weights?.[lift] === 'number').map(s => ({ week: s.week, val: s.weights[lift], date: s.date }));
     if (!points.length) return;
     html += `
       <div class="stat-card" style="margin-bottom:12px">
@@ -1393,7 +1420,7 @@ function renderHistory() {
 
   sessions.forEach(s => {
     const band = s.hooper ? HOOPER_BANDS.find(b => s.hooper.total >= b.min && s.hooper.total <= b.max) : null;
-    const keyW = Object.entries(s.weights || {}).slice(0,2).map(([k,v]) => `${k.split(' ')[0]}: <strong>${v}kg</strong>`).join(' · ');
+    const keyW = Object.entries(s.weights || {}).slice(0,2).map(([k,v]) => `${k.split(' ')[0]}: <strong>${Array.isArray(v) ? v.filter(x => x !== null).join('/') : v}kg</strong>`).join(' · ');
     const noteEntries = Object.entries(s.notes || {});
     const notesHtml = noteEntries.length
       ? `<div style="margin-top:4px;color:var(--muted);font-style:italic">${noteEntries.map(([k,v]) => `${k.split(' ')[0]}: ${v}`).join(' · ')}</div>`
