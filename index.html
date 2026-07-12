@@ -424,18 +424,6 @@
     color: var(--muted);
     margin-left: 4px;
   }
-  .drop-set-row {
-    background: rgba(255,255,255,.02);
-    padding: 10px 16px 6px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .drop-set-label {
-    font-size: 11px;
-    color: var(--muted);
-    font-style: italic;
-  }
 
   /* ── SEANCE NAV ── */
   .seance-nav {
@@ -1140,28 +1128,26 @@ function renderSeance() {
       const savedArr = Array.isArray(saved.weights?.[exo.nom]) ? saved.weights[exo.nom] : [];
       const weightInputs = Array.from({ length: exo.dropWeights }, (_, di) => {
         const v = savedArr[di] ?? '';
-        return `
-          <div style="display:flex;align-items:center;gap:4px">
-            <span style="font-size:9px;color:var(--muted)">${di + 1}</span>
-            <input type="number" class="weight-input ${v !== '' ? 'saved' : ''}"
-                   id="w_${i}_${di}" value="${v}" placeholder="—" min="0" step="1.25"
-                   style="width:56px;font-size:14px;padding:6px 4px"
-                   oninput="this.classList.remove('saved')">
-          </div>`;
+        return `<input type="number" class="weight-input ${v !== '' ? 'saved' : ''}"
+                 id="w_${i}_${di}" value="${v}" placeholder="—" min="0" step="1.25"
+                 style="width:28px;font-size:11px;padding:4px 2px;text-align:center"
+                 oninput="this.classList.remove('saved')">`;
       }).join('');
       html += `<div class="exo-item">
-        <div class="drop-set-row">
-          <span style="font-size:13px">🔻</span>
-          <span class="drop-set-label">${exo.nom} — ${exo.series} — RPE ${exo.rpe} — Récup ${exo.recup}</span>
-        </div>
-        <div class="exo-note-row" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <div class="exo-row">
+        <span class="exo-name">${exo.nom}</span>
+        <span class="exo-meta">${exo.series}</span>
+        <span class="exo-meta col-tempo">${exo.tempo}</span>
+        <span class="exo-meta col-recup">${exo.recup}</span>
+        <span class="exo-rpe">${exo.rpe}</span>
+        <div class="weight-input-wrap" style="display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end">
           ${weightInputs}
-          <span class="weight-unit">kg</span>
         </div>
-        <div class="exo-note-row">
-          <input type="text" class="note-input" id="note_${i}" value="${savedNote}" placeholder="Note">
-        </div>
-      </div>`;
+      </div>
+      <div class="exo-note-row">
+        <input type="text" class="note-input" id="note_${i}" value="${savedNote}" placeholder="Note">
+      </div>
+    </div>`;
       return;
     }
     const defaultW = FORCE_WEIGHTS[currentWeek]?.[currentSeance]?.[exo.nom] || '';
