@@ -698,9 +698,11 @@
 
   <!-- Abdos -->
   <div class="abdos-card">
-    <div class="abdos-title">🔥 Circuit abdos (après chaque séance)</div>
-    4 tours (15’’ entre chaque exo, 45’’ entre chaque tour) : 15 Crunch poulie · 15 L-Sit suspendu barre · 15 chandelles<br><br>
-    Gainage : 2’ (x2) — 15’’ axe statique · 15’’ commando · 15’’ statique · 15’’ dynamique jambes · 30’’ latéral droite · 30’’ latéral gauche
+    <div class="abdos-title" id="abdos-title">🔥 Circuit abdos (après chaque séance)</div>
+    <div id="abdos-content">
+      4 tours (15’’ entre chaque exo, 45’’ entre chaque tour) : 15 Crunch poulie · 15 L-Sit suspendu barre · 15 chandelles<br><br>
+      Gainage : 2’ (x2) — 15’’ axe statique · 15’’ commando · 15’’ statique · 15’’ dynamique jambes · 30’’ latéral droite · 30’’ latéral gauche
+    </div>
   </div>
 
   <button class="save-btn" onclick="saveSession()">💾 ENREGISTRER LA SÉANCE</button>
@@ -755,6 +757,7 @@ const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const CYCLES = {
   "force": { label: "Force", weeks: ["S1","S2","S3","S4","S5","S6","S7","S8","S9"] },
   "pushpulllegs": { label: "Masse", weeks: ["S10","S11","S12","S13"] },
+  "masse2": { label: "Masse", weeks: ["S14","S15","S16","S17"] },
   // prochain cycle à ajouter ici une fois défini par le coach
 };
 
@@ -772,6 +775,10 @@ const PROGRAMME = {
   "S11": { label: "Semaine 11", seances: ["Push","Pull","Legs"] },
   "S12": { label: "Semaine 12", seances: ["Push","Pull","Legs"] },
   "S13": { label: "Semaine 13", seances: ["Push","Pull","Legs"] },
+  "S14": { label: "Semaine 1", seances: ["M1","M2","M3"] },
+  "S15": { label: "Semaine 2", seances: ["M1","M2","M3"] },
+  "S16": { label: "Semaine 3", seances: ["M1","M2","M3"] },
+  "S17": { label: "Semaine 4", seances: ["M1","M2","M3"] },
 };
 
 const SEANCES = {
@@ -844,6 +851,45 @@ const SEANCES = {
       { nom: "Relevés de jambes suspendus",              series: "3 × 10-12", tempo: "Contrôlé", rpe: "—", recup: "30''" },
       { nom: "Hollow hold",                              series: "3 × 30''", tempo: "—", rpe: "—", recup: "30''" },
       { nom: "GHD / crunch machine",                     series: "3 × 10",  tempo: "2/0/1/0", rpe: "—", recup: "30''" },
+    ]
+  },
+  "M1": {
+    label: "Jambes",
+    warmup: "<strong>Échauffement :</strong> 3’ bike (RPE 3/4) — <strong>Mobilité :</strong> 3 tours (10/côté cheville — chevalier servant, appuie sur le genou de la jambe avant en gardant le talon au sol, 10/côté ouverture de hanche — position quadrupédie, genou fléchi, 5 grands cercles en contrôlé dans chaque sens) — <strong>Activation :</strong> 2 tours (10 air squat profond avec 3’’ pause en bas, 5 fentes alternées)",
+    abdosRoutine: "Enchaîné 1’ premier exercice directement avec 30’’ du second exercice, puis 30’’ de récup à la fin des 1’30.<br>2/3 tours :<br>— Sit up + Hollow<br>— Obliques poulie + gainage latéral (1er côté)<br>— Obliques poulie + gainage latéral (2ème côté)",
+    exercices: [
+      { nom: "Back squat",                                series: "4 × 10",      tempo: "1/0/1/0", rpe: "9/10", recup: "2'" },
+      { nom: "Fentes marchées (One hand DB overhead)",    series: "4 × 20m",     tempo: "/",       rpe: "9/10", recup: "2'" },
+      { nom: "Superset : Leg extension / Nordic curl",    series: "4 × 10 + 10", tempo: "1/0/1/0", rpe: "7/8",  recup: "1'15", superset: ["Leg ext.", "Nordic curl"] },
+      { nom: "Abduction hanche poulie basse",             series: "3 × 12",      tempo: "1/0/1/0", rpe: "7/8",  recup: "1'15" },
+      { nom: "Calf extension DB unilatéral",              series: "3 × 15",      tempo: "1/0/1/2", rpe: "7/8",  recup: "1'30" },
+    ]
+  },
+  "M2": {
+    label: "PECS / EPAULES / TRICEPS",
+    warmup: "<strong>Échauffement :</strong> 3’ AB (RPE 3/4) — <strong>Mobilité :</strong> 2 tours (10/côté rotation épaule R1/R2/R3, 10 tirages élastiques scapula, 10/côté ouverture thoracique) — <strong>Activation :</strong> montée en charge développé couché",
+    abdosRoutine: "Enchaîné 1’ premier exercice directement avec 30’’ du second exercice, puis 30’’ de récup à la fin des 1’30.<br>2/3 tours :<br>— Sit up + Hollow<br>— Obliques poulie + gainage latéral (1er côté)<br>— Obliques poulie + gainage latéral (2ème côté)",
+    exercices: [
+      { nom: "Dev couché barre",                                series: "4 × 8",  tempo: "2/0/1/0", rpe: "9/10", recup: "2'" },
+      { nom: "Développé militaire barre",                       series: "4 × 6",  tempo: "2/0/2/0", rpe: "9/10", recup: "2'" },
+      { nom: "Écarté couché haltère",                           series: "4 × 10", tempo: "1/0/1/0", rpe: "7/8",  recup: "1'30" },
+      { nom: "Superset : Élévations latérales / Frontales",     series: "3 × 12", tempo: "1/0/1/0", rpe: "7/8",  recup: "1'30", superset: ["Latérales", "Frontales"] },
+      { nom: "Oiseau",                                          series: "3 × 10", tempo: "1/0/1/2", rpe: "7/8",  recup: "1'30" },
+      { nom: "Triceps poulie haute unilatéral",                 series: "4 × 10", tempo: "1/0/1/0", rpe: "7/8",  recup: "1'15" },
+      { nom: "Pull over triceps unilatéral",                    series: "3 × 12", tempo: "1/0/1/0", rpe: "7/8",  recup: "1'15" },
+    ]
+  },
+  "M3": {
+    label: "DOS / BICEPS",
+    warmup: "<strong>Échauffement :</strong> 3’ rameur (RPE 3/4) — <strong>Mobilité :</strong> 2 tours (10 tirages horizontal élastique scapula, 10/côté ouverture thoracique, 10 dos rond / dos creux) — <strong>Activation :</strong> 2 tours (10 tirages vertical élastiques, 10 biceps curl haltère léger)",
+    abdosRoutine: "Enchaîné 1’ premier exercice directement avec 30’’ du second exercice, puis 30’’ de récup à la fin des 1’30.<br>2/3 tours :<br>— Sit up + Hollow<br>— Obliques poulie + gainage latéral (1er côté)<br>— Obliques poulie + gainage latéral (2ème côté)",
+    exercices: [
+      { nom: "Tractions",                          series: "4 × 8",  tempo: "1/0/1/0", rpe: "9/10", recup: "2'" },
+      { nom: "Tirage horizontal",                  series: "4 × 8",  tempo: "3/0/2/0", rpe: "9/10", recup: "2'" },
+      { nom: "Pull over poulie haute",              series: "4 × 12", tempo: "1/0/2/0", rpe: "7/8",  recup: "1'30" },
+      { nom: "Biceps curl barre EZ",                series: "3 × 10", tempo: "1/0/1/2", rpe: "7/8",  recup: "1'30" },
+      { nom: "Biceps curl alterné prise marteau",   series: "3 × 10", tempo: "1/0/1/1", rpe: "7/8",  recup: "1'30" },
+      { nom: "Biceps curl supination",              series: "3 × 12", tempo: "1/0/1/0", rpe: "7/8",  recup: "1'30" },
     ]
   },
 };
@@ -922,6 +968,13 @@ const FORCE_REPS = {
   "S9": {
     "1": { "Back Squat": 1, "Deadlift (barre)": 1 },
   },
+};
+
+// Circuit abdos par défaut (séances des cycles Force / Push Pull Legs, sans routine spécifique)
+const DEFAULT_ABDOS = {
+  title: "🔥 Circuit abdos (après chaque séance)",
+  content: `4 tours (15’’ entre chaque exo, 45’’ entre chaque tour) : 15 Crunch poulie · 15 L-Sit suspendu barre · 15 chandelles<br><br>
+      Gainage : 2’ (x2) — 15’’ axe statique · 15’’ commando · 15’’ statique · 15’’ dynamique jambes · 30’’ latéral droite · 30’’ latéral gauche`,
 };
 
 // Hooper bands
@@ -1111,6 +1164,14 @@ function renderSeance() {
   document.getElementById('exo-section-title').textContent = `Exercices — ${seance.label}`;
   document.getElementById('warmup-card').innerHTML = seance.warmup;
 
+  if (seance.abdosRoutine) {
+    document.getElementById('abdos-title').textContent = "🔥 Circuit abdos (à faire quand tu veux)";
+    document.getElementById('abdos-content').innerHTML = seance.abdosRoutine;
+  } else {
+    document.getElementById('abdos-title').textContent = DEFAULT_ABDOS.title;
+    document.getElementById('abdos-content').innerHTML = DEFAULT_ABDOS.content;
+  }
+
   // Build exercise list
   const el = document.getElementById('exo-list');
   let html = `<div class="exo-card">
@@ -1127,14 +1188,16 @@ function renderSeance() {
     const repsFaites = FORCE_REPS[currentWeek]?.[currentSeance]?.[exo.nom];
     const defaultNote = repsFaites ? `${repsFaites} reps réalisées` : '';
     const savedNote = saved.notes?.[exo.nom] ?? defaultNote;
-    if (exo.dropWeights) {
+    if (exo.dropWeights || exo.superset) {
+      const count = exo.superset ? exo.superset.length : exo.dropWeights;
       const savedArr = Array.isArray(saved.weights?.[exo.nom]) ? saved.weights[exo.nom] : [];
-      const weightInputs = Array.from({ length: exo.dropWeights }, (_, di) => {
+      const weightInputs = Array.from({ length: count }, (_, di) => {
         const v = savedArr[di] ?? '';
-        return `<input type="number" class="weight-input ${v !== '' ? 'saved' : ''}"
+        const label = exo.superset ? `<span style="font-size:9px;color:var(--muted);display:block;text-align:center;margin-bottom:2px">${exo.superset[di]}</span>` : '';
+        return `<div style="display:flex;flex-direction:column;align-items:center">${label}<input type="number" class="weight-input ${v !== '' ? 'saved' : ''}"
                  id="w_${i}_${di}" value="${v}" placeholder="—" min="0" step="1.25"
-                 style="width:28px;font-size:11px;padding:4px 2px;text-align:center"
-                 oninput="this.classList.remove('saved')">`;
+                 style="width:${exo.superset ? '38px' : '28px'};font-size:11px;padding:4px 2px;text-align:center"
+                 oninput="this.classList.remove('saved')"></div>`;
       }).join('');
       html += `<div class="exo-item">
       <div class="exo-row">
@@ -1224,8 +1287,9 @@ async function saveSession() {
   seance.exercices.forEach((exo, i) => {
     const noteInput = document.getElementById(`note_${i}`);
     if (noteInput && noteInput.value.trim()) notes[exo.nom] = noteInput.value.trim();
-    if (exo.dropWeights) {
-      const arr = Array.from({ length: exo.dropWeights }, (_, di) => {
+    if (exo.dropWeights || exo.superset) {
+      const count = exo.superset ? exo.superset.length : exo.dropWeights;
+      const arr = Array.from({ length: count }, (_, di) => {
         const input = document.getElementById(`w_${i}_${di}`);
         if (input && input.value) {
           input.classList.add('saved');
@@ -1421,7 +1485,7 @@ function renderDashCharts() {
 
   const codeSessions = sessions.filter(s => s.seance === dashSeance).sort((a, b) => weekNum(a.week) - weekNum(b.week));
   const def = SEANCES[dashSeance];
-  let exoOrder = def ? def.exercices.filter(e => !e.dropWeights).map(e => e.nom) : [];
+  let exoOrder = def ? def.exercices.filter(e => !e.dropWeights && !e.superset).map(e => e.nom) : [];
   codeSessions.forEach(s => Object.keys(s.weights || {}).forEach(k => { if (!exoOrder.includes(k)) exoOrder.push(k); }));
 
   let html = '';
