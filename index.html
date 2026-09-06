@@ -758,6 +758,7 @@ const CYCLES = {
   "force": { label: "Force", weeks: ["S1","S2","S3","S4","S5","S6","S7","S8","S9"] },
   "pushpulllegs": { label: "Masse", weeks: ["S10","S11","S12","S13"] },
   "masse2": { label: "Masse", weeks: ["S14","S15","S16","S17"] },
+  "force2": { label: "Force", weeks: ["S18","S19","S20","S21"] },
   // prochain cycle à ajouter ici une fois défini par le coach
 };
 
@@ -771,14 +772,18 @@ const PROGRAMME = {
   "S7": { label: "Semaine 7", seances: ["1","2"] },
   "S8": { label: "Semaine 8", seances: ["1","2"] },
   "S9": { label: "Semaine 9", seances: ["1","2"] },
-  "S10": { label: "Semaine 10", seances: ["Push","Pull","Legs"] },
-  "S11": { label: "Semaine 11", seances: ["Push","Pull","Legs"] },
-  "S12": { label: "Semaine 12", seances: ["Push","Pull","Legs"] },
-  "S13": { label: "Semaine 13", seances: ["Push","Pull","Legs"] },
+  "S10": { label: "Semaine 1", seances: ["Push","Pull","Legs"] },
+  "S11": { label: "Semaine 2", seances: ["Push","Pull","Legs"] },
+  "S12": { label: "Semaine 3", seances: ["Push","Pull","Legs"] },
+  "S13": { label: "Semaine 4", seances: ["Push","Pull","Legs"] },
   "S14": { label: "Semaine 1", seances: ["M1","M2","M3"] },
   "S15": { label: "Semaine 2", seances: ["M1","M2","M3"] },
   "S16": { label: "Semaine 3", seances: ["M1","M2","M3"] },
   "S17": { label: "Semaine 4", seances: ["M1","M2","M3"] },
+  "S18": { label: "Semaine 1", seances: ["F1","F2","F3"] },
+  "S19": { label: "Semaine 2", seances: ["F1","F2","F3"] },
+  "S20": { label: "Semaine 3", seances: ["F1","F2","F3"] },
+  "S21": { label: "Semaine 4", seances: ["F1","F2","F3"] },
 };
 
 const SEANCES = {
@@ -892,7 +897,69 @@ const SEANCES = {
       { nom: "Biceps curl supination",              series: "3 × 12", tempo: "1/0/1/0", rpe: "7/8",  recup: "1'30" },
     ]
   },
+  "F1": {
+    label: "Jambes",
+    warmup: "<strong>Échauffement :</strong> 3’ bike (RPE 3/4) — <strong>Mobilité :</strong> 3 tours (10/côté cheville — chevalier servant, appuies sur le genou de la jambe avant en gardant le talon au sol, 10/côté ouverture de hanche — position quadrupédie, genou fléchi, 5 grands cercles en contrôlé dans chaque sens) — <strong>Activation :</strong> 2 tours (10 air squat profond avec 3’’ pause en bas, 5 fentes alternées)",
+    abdosRoutine: "2/3 tours :<br>— 20 Crunch poulie<br>— 20 Landmine rotation à genou<br>— 20 V UP",
+    exercices: [
+      { nom: "Back squat",                                        series: "4 × 5",       tempo: "/",       rpe: "9/10", recup: "3'30-4'30" },
+      { nom: "Superset : Leg extension unilatéral / Leg curl unilatéral", series: "3 × 12 + 12", tempo: "1/0/1/0", rpe: "7/8", recup: "1'", superset: ["Leg ext.", "Leg curl"] },
+      { nom: "Hip thrust",                                        series: "3 × 12",      tempo: "1/0/1/0", rpe: "7/8",  recup: "1'30" },
+      { nom: "Calf extension DB unilatéral",                      series: "3 × 15",      tempo: "1/0/1/2", rpe: "7/8",  recup: "1'30" },
+      { nom: "Crunch poulie",                                     series: "20",          tempo: "/",       rpe: "/",    recup: "/" },
+      { nom: "Landmine rotation à genou",                         series: "20",          tempo: "/",       rpe: "/",    recup: "/" },
+      { nom: "V UP",                                              series: "20",          tempo: "/",       rpe: "/",    recup: "/", noWeight: true },
+    ]
+  },
+  "F2": {
+    label: "PECS / EPAULES / TRICEPS",
+    warmup: "<strong>Échauffement :</strong> 3’ AB (RPE 3/4) — <strong>Mobilité :</strong> 2 tours (10/côté rotation épaule R1/R2/R3, 10 tirages élastiques scapula, 10/côté ouverture thoracique) — <strong>Activation :</strong> montée en charge développé couché",
+    abdosRoutine: "2/3 tours :<br>— 20 Crunch poulie<br>— 20 Landmine rotation à genou<br>— 20 V UP",
+    exercices: [
+      { nom: "Dev couché barre",                                series: "4 × 5",  tempo: "/",       rpe: "9/10", recup: "3'30-4'30" },
+      { nom: "Écarté poulie haute",                             series: "3 × 12", tempo: "1/0/1/0", rpe: "7/8",  recup: "1'30" },
+      { nom: "Superset : Élévations latérales / Frontales",     series: "3 × 12 + 12", tempo: "1/0/1/0", rpe: "7/8", recup: "1'30", superset: ["Latérales", "Frontales"] },
+      { nom: "Triceps corde poulie basse derrière",             series: "4 × 15", tempo: "1/0/1/0", rpe: "7/8",  recup: "1'30" },
+      { nom: "Triceps extension corde poulie haute (drop-set x3)", series: "4 × 10-15", tempo: "1/0/1/0", rpe: "9/10", recup: "2'", dropWeights: 3 },
+      { nom: "Crunch poulie",                                   series: "20",     tempo: "/",       rpe: "/",    recup: "/" },
+      { nom: "Landmine rotation à genou",                       series: "20",     tempo: "/",       rpe: "/",    recup: "/" },
+      { nom: "V UP",                                            series: "20",     tempo: "/",       rpe: "/",    recup: "/", noWeight: true },
+    ]
+  },
+  "F3": {
+    label: "DOS / BICEPS",
+    warmup: "<strong>Échauffement :</strong> 3’ rameur (RPE 3/4) — <strong>Mobilité :</strong> 2 tours (10 tirages horizontal élastique scapula, 10/côté ouverture thoracique, 10 dos rond / dos creux) — <strong>Activation :</strong> montée en charge Rowing barre",
+    abdosRoutine: "2/3 tours :<br>— 20 Crunch poulie<br>— 20 Landmine rotation à genou<br>— 20 V UP",
+    exercices: [
+      { nom: "Rowing buste penché barre",                          series: "4 × 8",  tempo: "2/0/2/0", rpe: "9/10", recup: "2'" },
+      { nom: "Tirage horizontal",                                  series: "3 × 15", tempo: "2/0/1/2", rpe: "7/8",  recup: "1'30" },
+      { nom: "Pull over poulie haute",                             series: "4 × 12", tempo: "1/0/2/0", rpe: "7/8",  recup: "1'30" },
+      { nom: "Biceps curl barre EZ sur banc incliné (ventre sur le banc)", series: "3 × 12", tempo: "1/0/1/0", rpe: "7/8", recup: "1'30" },
+      { nom: "Biceps curl alterné supination",                     series: "3 × 12", tempo: "1/0/1/1", rpe: "7/8",  recup: "1'30" },
+      { nom: "Biceps curl corde poulie basse (drop set x3)",       series: "4 × 10-15", tempo: "1/0/1/0", rpe: "9/10", recup: "2'", dropWeights: 3 },
+      { nom: "Crunch poulie",                                      series: "20",     tempo: "/",       rpe: "/",    recup: "/" },
+      { nom: "Landmine rotation à genou",                          series: "20",     tempo: "/",       rpe: "/",    recup: "/" },
+      { nom: "V UP",                                               series: "20",     tempo: "/",       rpe: "/",    recup: "/", noWeight: true },
+    ]
+  },
 };
+
+// Cycle "Force" (Cycle 4) — Back squat / Dev couché barre en dégressif sur les 4 semaines
+const FORCE2_MAIN_LIFT_SERIES = { "S18": "4 × 5", "S19": "4 × 4", "S20": "4 × 3", "S21": "4 × 2" };
+
+function getSeanceDef(week, code) {
+  if (code === "F1" && FORCE2_MAIN_LIFT_SERIES[week]) {
+    const base = SEANCES["F1"];
+    const exercices = base.exercices.map(e => e.nom === "Back squat" ? { ...e, series: FORCE2_MAIN_LIFT_SERIES[week] } : e);
+    return { ...base, exercices };
+  }
+  if (code === "F2" && FORCE2_MAIN_LIFT_SERIES[week]) {
+    const base = SEANCES["F2"];
+    const exercices = base.exercices.map(e => e.nom === "Dev couché barre" ? { ...e, series: FORCE2_MAIN_LIFT_SERIES[week] } : e);
+    return { ...base, exercices };
+  }
+  return SEANCES[code];
+}
 
 // Charges connues du cycle Force, extraites du suivi Excel de Fifi
 // (progression par paliers descendants 6→1 rep, charge croissante à chaque séance)
@@ -1145,7 +1212,7 @@ function selectSeance(s) {
 }
 
 function renderSeance() {
-  const seance = SEANCES[currentSeance];
+  const seance = getSeanceDef(currentWeek, currentSeance);
   const data = loadData();
   const key = `${currentWeek}_${currentSeance}`;
   const saved = data[key] || {};
@@ -1218,6 +1285,14 @@ function renderSeance() {
     }
     const defaultW = FORCE_WEIGHTS[currentWeek]?.[currentSeance]?.[exo.nom] || '';
     const savedW = saved.weights?.[exo.nom] ?? defaultW;
+    const weightCell = exo.noWeight
+      ? `<span class="exo-meta" style="text-align:right">—</span>`
+      : `<div class="weight-input-wrap">
+          <input type="number" class="weight-input ${savedW ? 'saved' : ''}"
+                 id="w_${i}" value="${savedW}" placeholder="—" min="0" step="1.25"
+                 oninput="this.classList.remove('saved')">
+          <span class="weight-unit">kg</span>
+        </div>`;
     html += `<div class="exo-item">
       <div class="exo-row">
         <span class="exo-name">${exo.nom}</span>
@@ -1225,12 +1300,7 @@ function renderSeance() {
         <span class="exo-meta col-tempo">${exo.tempo}</span>
         <span class="exo-meta col-recup">${exo.recup}</span>
         <span class="exo-rpe">${exo.rpe}</span>
-        <div class="weight-input-wrap">
-          <input type="number" class="weight-input ${savedW ? 'saved' : ''}"
-                 id="w_${i}" value="${savedW}" placeholder="—" min="0" step="1.25"
-                 oninput="this.classList.remove('saved')">
-          <span class="weight-unit">kg</span>
-        </div>
+        ${weightCell}
       </div>
       <div class="exo-note-row">
         <input type="text" class="note-input" id="note_${i}" value="${savedNote}" placeholder="Note">
@@ -1271,7 +1341,7 @@ function updateHooper() {
 // SAVE
 // ═══════════════════════════════════════════════════
 async function saveSession() {
-  const seance = SEANCES[currentSeance];
+  const seance = getSeanceDef(currentWeek, currentSeance);
 
   const hooper = {
     sommeil: +document.getElementById('sl-sommeil').value,
