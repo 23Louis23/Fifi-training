@@ -473,6 +473,25 @@
     color: var(--text);
     margin-bottom: 8px;
   }
+  .abdos-weights-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .abdos-weight-slot {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .abdos-weight-slot label {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
 
   /* ── SAVE BTN ── */
   .save-btn {
@@ -703,6 +722,7 @@
       4 tours (15’’ entre chaque exo, 45’’ entre chaque tour) : 15 Crunch poulie · 15 L-Sit suspendu barre · 15 chandelles<br><br>
       Gainage : 2’ (x2) — 15’’ axe statique · 15’’ commando · 15’’ statique · 15’’ dynamique jambes · 30’’ latéral droite · 30’’ latéral gauche
     </div>
+    <div id="abdos-weights"></div>
   </div>
 
   <button class="save-btn" onclick="saveSession()">💾 ENREGISTRER LA SÉANCE</button>
@@ -901,35 +921,32 @@ const SEANCES = {
     label: "Jambes",
     warmup: "<strong>Échauffement :</strong> 3’ bike (RPE 3/4) — <strong>Mobilité :</strong> 3 tours (10/côté cheville — chevalier servant, appuies sur le genou de la jambe avant en gardant le talon au sol, 10/côté ouverture de hanche — position quadrupédie, genou fléchi, 5 grands cercles en contrôlé dans chaque sens) — <strong>Activation :</strong> 2 tours (10 air squat profond avec 3’’ pause en bas, 5 fentes alternées)",
     abdosRoutine: "2/3 tours :<br>— 20 Crunch poulie<br>— 20 Landmine rotation à genou<br>— 20 V UP",
+    abdosWeights: ["Crunch poulie", "Landmine rotation à genou"],
     exercices: [
       { nom: "Back squat",                                        series: "4 × 5",       tempo: "/",       rpe: "9/10", recup: "3'30-4'30" },
       { nom: "Superset : Leg extension unilatéral / Leg curl unilatéral", series: "3 × 12 + 12", tempo: "1/0/1/0", rpe: "7/8", recup: "1'", superset: ["Leg ext.", "Leg curl"] },
       { nom: "Hip thrust",                                        series: "3 × 12",      tempo: "1/0/1/0", rpe: "7/8",  recup: "1'30" },
       { nom: "Calf extension DB unilatéral",                      series: "3 × 15",      tempo: "1/0/1/2", rpe: "7/8",  recup: "1'30" },
-      { nom: "Crunch poulie",                                     series: "20",          tempo: "/",       rpe: "/",    recup: "/" },
-      { nom: "Landmine rotation à genou",                         series: "20",          tempo: "/",       rpe: "/",    recup: "/" },
-      { nom: "V UP",                                              series: "20",          tempo: "/",       rpe: "/",    recup: "/", noWeight: true },
     ]
   },
   "F2": {
     label: "PECS / EPAULES / TRICEPS",
     warmup: "<strong>Échauffement :</strong> 3’ AB (RPE 3/4) — <strong>Mobilité :</strong> 2 tours (10/côté rotation épaule R1/R2/R3, 10 tirages élastiques scapula, 10/côté ouverture thoracique) — <strong>Activation :</strong> montée en charge développé couché",
     abdosRoutine: "2/3 tours :<br>— 20 Crunch poulie<br>— 20 Landmine rotation à genou<br>— 20 V UP",
+    abdosWeights: ["Crunch poulie", "Landmine rotation à genou"],
     exercices: [
       { nom: "Dev couché barre",                                series: "4 × 5",  tempo: "/",       rpe: "9/10", recup: "3'30-4'30" },
       { nom: "Écarté poulie haute",                             series: "3 × 12", tempo: "1/0/1/0", rpe: "7/8",  recup: "1'30" },
       { nom: "Superset : Élévations latérales / Frontales",     series: "3 × 12 + 12", tempo: "1/0/1/0", rpe: "7/8", recup: "1'30", superset: ["Latérales", "Frontales"] },
       { nom: "Triceps corde poulie basse derrière",             series: "4 × 15", tempo: "1/0/1/0", rpe: "7/8",  recup: "1'30" },
       { nom: "Triceps extension corde poulie haute (drop-set x3)", series: "4 × 10-15", tempo: "1/0/1/0", rpe: "9/10", recup: "2'", dropWeights: 3 },
-      { nom: "Crunch poulie",                                   series: "20",     tempo: "/",       rpe: "/",    recup: "/" },
-      { nom: "Landmine rotation à genou",                       series: "20",     tempo: "/",       rpe: "/",    recup: "/" },
-      { nom: "V UP",                                            series: "20",     tempo: "/",       rpe: "/",    recup: "/", noWeight: true },
     ]
   },
   "F3": {
     label: "DOS / BICEPS",
     warmup: "<strong>Échauffement :</strong> 3’ rameur (RPE 3/4) — <strong>Mobilité :</strong> 2 tours (10 tirages horizontal élastique scapula, 10/côté ouverture thoracique, 10 dos rond / dos creux) — <strong>Activation :</strong> montée en charge Rowing barre",
     abdosRoutine: "2/3 tours :<br>— 20 Crunch poulie<br>— 20 Landmine rotation à genou<br>— 20 V UP",
+    abdosWeights: ["Crunch poulie", "Landmine rotation à genou"],
     exercices: [
       { nom: "Rowing buste penché barre",                          series: "4 × 8",  tempo: "2/0/2/0", rpe: "9/10", recup: "2'" },
       { nom: "Tirage horizontal",                                  series: "3 × 15", tempo: "2/0/1/2", rpe: "7/8",  recup: "1'30" },
@@ -937,9 +954,6 @@ const SEANCES = {
       { nom: "Biceps curl barre EZ sur banc incliné (ventre sur le banc)", series: "3 × 12", tempo: "1/0/1/0", rpe: "7/8", recup: "1'30" },
       { nom: "Biceps curl alterné supination",                     series: "3 × 12", tempo: "1/0/1/1", rpe: "7/8",  recup: "1'30" },
       { nom: "Biceps curl corde poulie basse (drop set x3)",       series: "4 × 10-15", tempo: "1/0/1/0", rpe: "9/10", recup: "2'", dropWeights: 3 },
-      { nom: "Crunch poulie",                                      series: "20",     tempo: "/",       rpe: "/",    recup: "/" },
-      { nom: "Landmine rotation à genou",                          series: "20",     tempo: "/",       rpe: "/",    recup: "/" },
-      { nom: "V UP",                                               series: "20",     tempo: "/",       rpe: "/",    recup: "/", noWeight: true },
     ]
   },
 };
@@ -1211,6 +1225,28 @@ function selectSeance(s) {
   renderSeance();
 }
 
+function renderAbdosWeights(seance, saved) {
+  const wrap = document.getElementById('abdos-weights');
+  if (!seance.abdosWeights || !seance.abdosWeights.length) {
+    wrap.innerHTML = '';
+    return;
+  }
+  wrap.innerHTML = `<div class="abdos-weights-row">
+    ${seance.abdosWeights.map((nom, i) => {
+      const v = saved.weights?.[nom] ?? '';
+      return `<div class="abdos-weight-slot">
+        <label>${nom}</label>
+        <div class="weight-input-wrap">
+          <input type="number" class="weight-input ${v !== '' ? 'saved' : ''}"
+                 id="abdos_w_${i}" value="${v}" placeholder="—" min="0" step="1.25"
+                 oninput="this.classList.remove('saved')">
+          <span class="weight-unit">kg</span>
+        </div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
 function renderSeance() {
   const seance = getSeanceDef(currentWeek, currentSeance);
   const data = loadData();
@@ -1238,6 +1274,7 @@ function renderSeance() {
     document.getElementById('abdos-title').textContent = DEFAULT_ABDOS.title;
     document.getElementById('abdos-content').innerHTML = DEFAULT_ABDOS.content;
   }
+  renderAbdosWeights(seance, saved);
 
   // Build exercise list
   const el = document.getElementById('exo-list');
@@ -1376,6 +1413,16 @@ async function saveSession() {
       input.classList.add('saved');
     }
   });
+
+  if (seance.abdosWeights) {
+    seance.abdosWeights.forEach((nom, i) => {
+      const input = document.getElementById(`abdos_w_${i}`);
+      if (input && input.value) {
+        weights[nom] = +input.value;
+        input.classList.add('saved');
+      }
+    });
+  }
 
   const entry = {
     athlete: ATHLETE,
