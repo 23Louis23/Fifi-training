@@ -779,6 +779,7 @@ const CYCLES = {
   "pushpulllegs": { label: "Masse", weeks: ["S10","S11","S12","S13"] },
   "masse2": { label: "Masse", weeks: ["S14","S15","S16","S17"] },
   "force2": { label: "Force", weeks: ["S18","S19","S20","S21"] },
+  "masse3": { label: "Masse", weeks: ["S22","S23","S24","S25","S26"] },
   // prochain cycle à ajouter ici une fois défini par le coach
 };
 
@@ -804,6 +805,11 @@ const PROGRAMME = {
   "S19": { label: "Semaine 2", seances: ["F1","F2","F3"] },
   "S20": { label: "Semaine 3", seances: ["F1","F2","F3"] },
   "S21": { label: "Semaine 4", seances: ["F1","F2","F3"] },
+  "S22": { label: "Semaine 1", seances: ["MS1","MS2","MS3"] },
+  "S23": { label: "Semaine 2", seances: ["MS1","MS2","MS3"] },
+  "S24": { label: "Semaine 3", seances: ["MS1","MS2","MS3"] },
+  "S25": { label: "Semaine 4", seances: ["MS1","MS2","MS3"] },
+  "S26": { label: "Semaine 5", seances: ["MS1","MS2","MS3"] },
 };
 
 const SEANCES = {
@@ -954,6 +960,44 @@ const SEANCES = {
       { nom: "Biceps curl barre EZ sur banc incliné (ventre sur le banc)", series: "3 × 12", tempo: "1/0/1/0", rpe: "7/8", recup: "1'30" },
       { nom: "Biceps curl alterné supination",                     series: "3 × 12", tempo: "1/0/1/1", rpe: "7/8",  recup: "1'30" },
       { nom: "Biceps curl corde poulie basse (drop set x3)",       series: "4 × 10-15", tempo: "1/0/1/0", rpe: "9/10", recup: "2'", dropWeights: 3 },
+    ]
+  },
+  "MS1": {
+    label: "Jambes",
+    warmup: "<strong>Échauffement :</strong> 3’ bike (RPE 3/4) — 10/côté monster walk, 10 glute bridge avec 2’’ contraction en haut, 10 montées sur pointe de pied, 10/côté cheville (chevalier servant, appuie sur le genou de la jambe avant en gardant le talon au sol), 10/côté ouverture de hanche (position quadrupédie, genou fléchi, 5 grands cercles en contrôlé dans chaque sens) — <strong>Potentialisation :</strong> 2 tours (10 air squat profond avec 2’’ pause en bas, 5 box jump avec box basse)",
+    abdosRoutine: "2/3 tours :<br>— 10-15 roulettes<br>— 12/côté obliques poulie<br>— 20m/côté farmer carry KB unilatéral",
+    exercices: [
+      { nom: "Front squat",                        series: "4 × 8",      tempo: "2/0/1/0", rpe: "9/10", recup: "2'30-3'" },
+      { nom: "Split squat",                        series: "3 × 8/côté", tempo: "1/0/1/0", rpe: "7/8",  recup: "2'" },
+      { nom: "RDL",                                series: "3 × 12",     tempo: "1/0/1/0", rpe: "7/8",  recup: "1'30-2'" },
+      { nom: "Abduction hanche poulie basse",      series: "3 × 12",     tempo: "1/0/1/0", rpe: "7/8",  recup: "1'15" },
+      { nom: "Calf extension DB unilatéral",       series: "3 × 15",     tempo: "1/0/1/2", rpe: "7/8",  recup: "1'30" },
+    ]
+  },
+  "MS2": {
+    label: "PECS / EPAULES / TRICEPS",
+    warmup: "<strong>Échauffement :</strong> 3’ AB (RPE 3/4) — <strong>Mobilité :</strong> 2 tours (10/côté rotation externe épaule, 10 pompes scapula, 10/côté ouverture thoracique, 30’’ gainage) — <strong>Activation :</strong> montée en charge développé incliné",
+    abdosRoutine: "2/3 tours :<br>— 10-15 roulettes<br>— 12/côté obliques poulie<br>— 20m/côté farmer carry KB unilatéral",
+    exercices: [
+      { nom: "Dev incliné haltère",              series: "4 × 8",  tempo: "2/0/1/0", rpe: "9/10", recup: "2'" },
+      { nom: "Développé militaire barre",        series: "4 × 8",  tempo: "2/0/1/0", rpe: "9/10", recup: "2'" },
+      { nom: "Dips",                             series: "3 × 10", tempo: "1/0/1/0", rpe: "7/8",  recup: "1'30-2'" },
+      { nom: "Élévations latérales",             series: "3 × 12", tempo: "1/0/1/0", rpe: "7/8",  recup: "1'30" },
+      { nom: "Face pull poulie",                 series: "3 × 12", tempo: "1/0/1/1", rpe: "7/8",  recup: "1'30" },
+      { nom: "Triceps poulie haute unilatéral",  series: "3 × 10", tempo: "1/0/1/0", rpe: "7/8",  recup: "1'" },
+      { nom: "Triceps barre EZ au front",        series: "3 × 12", tempo: "1/0/1/0", rpe: "7/8",  recup: "1'15" },
+    ]
+  },
+  "MS3": {
+    label: "DOS / BICEPS",
+    warmup: "<strong>Échauffement :</strong> 3’ rameur (RPE 3/4) — <strong>Mobilité :</strong> 2 tours (10 pompes scapula, 10/côté ouverture thoracique, 10 dos rond / dos creux) — <strong>Activation :</strong> 2 tours (10 tirages vertical élastiques)",
+    abdosRoutine: "2/3 tours :<br>— 10-15 roulettes<br>— 12/côté obliques poulie<br>— 20m/côté farmer carry KB unilatéral",
+    exercices: [
+      { nom: "Tractions",                                   series: "4 × 8",  tempo: "1/0/1/0", rpe: "9/10", recup: "2'" },
+      { nom: "Rowing unilatéral buste // sol haltère",      series: "3 × 10", tempo: "1/0/1/0", rpe: "7/8",  recup: "1'30" },
+      { nom: "Pull over poulie médiane sur banc incliné",   series: "3 × 12", tempo: "1/0/1/0", rpe: "7/8",  recup: "1'30" },
+      { nom: "Biceps curl supination incliné",              series: "3 × 10", tempo: "1/0/1/2", rpe: "7/8",  recup: "1'30" },
+      { nom: "Biceps curl prise marteau",                   series: "3 × 10", tempo: "1/0/1/1", rpe: "7/8",  recup: "1'30" },
     ]
   },
 };
